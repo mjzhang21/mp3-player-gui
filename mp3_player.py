@@ -1,16 +1,18 @@
 import tkinter as tk
 
 
-class MusicPlayer:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Amazing MP3 Player")
-        self.root.geometry("800x600")
+root = tk.Tk()
+root.title("Amazing MP3 Player")
+root.geometry("800x600")
 
-        self.label = tk.Label(self.root, text="MP3 Player", font=("Arial", 24))
-        self.label.pack(padx=20, pady=20)
+label = tk.Label(
+    root,
+    text="MP3 Player",
+    fg="white",
+    bg="blue",
+    width=20,
+    font=("Arial", 24),
+)
+label.pack(padx=20, pady=20)
 
-        self.root.mainloop()
-
-
-MusicPlayer()
+root.mainloop()
