@@ -1,18 +1,26 @@
 import tkinter as tk
 
 
-root = tk.Tk()
-root.title("Amazing MP3 Player")
-root.geometry("800x600")
+app = tk.Tk()
+app.title("Amazing MP3 Player")
 
-label = tk.Label(
-    root,
-    text="MP3 Player",
-    fg="white",
-    bg="blue",
-    width=20,
-    font=("Arial", 24),
-)
-label.pack(padx=20, pady=20)
+# app.columnconfigure(0, minsize=800, weight=1)
 
-root.mainloop()
+# app.rowconfigure(1, minsize=500, weight=1)
+song_listbox = tk.Listbox(app, bg="green", fg="white")
+song_listbox.pack()
+
+control_frame = tk.Frame(app)
+
+
+btn_next = tk.Button(control_frame, text="Next Song")
+btn_prev = tk.Button(control_frame, text="Prev Song")
+btn_play = tk.Button(control_frame, text="Play/Pause")
+
+
+btn_prev.grid(row=0, column=0, sticky="ns", padx=5)
+btn_play.grid(row=0, column=1, sticky="ns", padx=5)
+btn_next.grid(row=0, column=2, sticky="ns", padx=5)
+
+control_frame.pack(side="bottom")
+app.mainloop()
