@@ -1,26 +1,34 @@
 import tkinter as tk
 
-
-app = tk.Tk()
-app.title("Amazing MP3 Player")
-
-# app.columnconfigure(0, minsize=800, weight=1)
-
-# app.rowconfigure(1, minsize=500, weight=1)
-song_listbox = tk.Listbox(app, bg="green", fg="white")
-song_listbox.pack()
-
-control_frame = tk.Frame(app)
+root = tk.Tk()
+root.title("Amazing MP3 Player")
+root.geometry("700x500")
 
 
-btn_next = tk.Button(control_frame, text="Next Song")
-btn_prev = tk.Button(control_frame, text="Prev Song")
-btn_play = tk.Button(control_frame, text="Play/Pause")
+play = tk.PhotoImage(file="play-button.png")
+pause = tk.PhotoImage(file="pause-button.png")
+forward = tk.PhotoImage(file="forward-button.png")
+back = tk.PhotoImage(file="back-button.png")
 
 
-btn_prev.grid(row=0, column=0, sticky="ns", padx=5)
-btn_play.grid(row=0, column=1, sticky="ns", padx=5)
-btn_next.grid(row=0, column=2, sticky="ns", padx=5)
+root.rowconfigure(0, weight=1)
+root.rowconfigure(1, minsize=100, weight=0)
+root.columnconfigure(0, weight=1)
+root.columnconfigure(1, minsize=260)
+song_listbox = tk.Listbox(root, bg="green", fg="white")
 
-control_frame.pack(side="bottom")
-app.mainloop()
+control_frame = tk.Frame(root)
+
+btn_forward = tk.Button(control_frame, image=forward)
+btn_back = tk.Button(control_frame, image=back)
+btn_play = tk.Button(control_frame, image=play)
+
+btn_back.grid(row=0, column=0, sticky="ew", padx=15)
+btn_play.grid(row=0, column=1, sticky="ew", padx=15)
+btn_forward.grid(row=0, column=2, sticky="ew", padx=15)
+
+song_listbox.grid(row=0, column=1, rowspan=2, sticky="nsew")
+control_frame.grid(row=1, column=0, sticky="ns")
+
+
+root.mainloop()
