@@ -5,10 +5,10 @@ root.title("Amazing MP3 Player")
 root.geometry("700x500")
 
 
-play = tk.PhotoImage(file="play-button.png")
-pause = tk.PhotoImage(file="pause-button.png")
-forward = tk.PhotoImage(file="forward-button.png")
-back = tk.PhotoImage(file="back-button.png")
+play = tk.PhotoImage(file="images/play-button.png")
+pause = tk.PhotoImage(file="images/pause-button.png")
+forward = tk.PhotoImage(file="images/forward-button.png")
+back = tk.PhotoImage(file="images/back-button.png")
 
 
 root.rowconfigure(0, weight=1)
