@@ -1,9 +1,21 @@
 import tkinter as tk
+import tkinter.filedialog
 
 root = tk.Tk()
 root.title("Amazing MP3 Player")
 root.geometry("700x500")
 
+
+def open_file():
+    filepath = tk.filedialog.askopenfilename(title="Select a file")
+
+
+my_menu = tk.Menu(root)
+root.config(menu=my_menu)
+file_menu = tk.Menu(my_menu, tearoff=0)
+my_menu.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="Open", command=open_file)
+file_menu.add_command(label="Exit", command=quit)
 
 play = tk.PhotoImage(file="images/play-button.png")
 pause = tk.PhotoImage(file="images/pause-button.png")
