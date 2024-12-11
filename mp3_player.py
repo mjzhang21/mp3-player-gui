@@ -1,3 +1,4 @@
+import pygame
 import tkinter as tk
 import tkinter.filedialog
 
@@ -7,13 +8,18 @@ root.geometry("700x500")
 
 song_dict = {}
 count = 0
+path = ""
+
+pygame.mixer.init()
 
 
 def add_song():
     global count
+    global path
     song_path = tk.filedialog.askopenfilename(
         title="Select a file", filetypes=(("mp3 Files", "*.mp3"),)
     )
+    path = song_path
     song_name = song_path.split("/")[-1].split(".")[0]
     song_dict[count] = [song_name, song_path]
     song_listbox.insert(count, song_name)
@@ -21,9 +27,16 @@ def add_song():
     count += 1
 
 
+def play_music():
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.play()
+    current_song = path
+
+
 my_menu = tk.Menu(root)
 root.config(menu=my_menu)
 file_menu = tk.Menu(my_menu, tearoff=0)
+
 
 my_menu.add_cascade(label="File", menu=file_menu)
 file_menu.add_command(label="Open", command=add_song)
@@ -45,7 +58,7 @@ control_frame = tk.Frame(root)
 
 btn_forward = tk.Button(control_frame, image=forward)
 btn_back = tk.Button(control_frame, image=back)
-btn_play = tk.Button(control_frame, image=play)
+btn_play = tk.Button(control_frame, image=play, command=play_music)
 
 btn_back.grid(row=0, column=0, sticky="ew", padx=15)
 btn_play.grid(row=0, column=1, sticky="ew", padx=15)
