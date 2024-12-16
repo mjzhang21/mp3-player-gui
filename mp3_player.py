@@ -1,6 +1,6 @@
 import pygame
 import tkinter as tk
-import tkinter.filedialog
+from tkinter import filedialog
 
 
 class MusicPlayer:
@@ -48,6 +48,8 @@ class MusicPlayer:
         self.btn_back.grid(row=0, column=0, sticky="ew", padx=15)
         self.btn_play.grid(row=0, column=1, sticky="ew", padx=15)
         self.btn_forward.grid(row=0, column=2, sticky="ew", padx=15)
+        
+        self.song_listbox.bind('<<ListboxSelect>>', self.on_select)
 
     def add_song(self):
         song_path = tk.filedialog.askopenfilename(
@@ -61,9 +63,20 @@ class MusicPlayer:
             self.count += 1
 
     def play_music(self):
+            
         if self.path:
             pygame.mixer.music.load(self.path)
             pygame.mixer.music.play()
+            
+    def on_select(self, event):
+        w = event.widget
+        index = int(w.curselection()[0])
+        
+        song_path = self.song_dict[index][1]
+        if song_path:
+            self.path = song_path
+        
+   
 
 
 if __name__ == "__main__":
