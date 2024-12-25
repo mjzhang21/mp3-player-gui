@@ -2,7 +2,6 @@ import pygame
 import tkinter as tk
 from tkinter import filedialog
 
-
 class MusicPlayer:
     def __init__(self, root):
         self.root = root
@@ -12,6 +11,7 @@ class MusicPlayer:
         self.song_dict = {}
         self.path = ""
         self.count = 0
+        self.mxstate = 0 #music play state
 
         pygame.mixer.init()
 
@@ -40,8 +40,8 @@ class MusicPlayer:
         self.control_frame.grid(row=1, column=0, sticky="ns")
 
         self.btn_back = tk.Button(self.control_frame, image=self.back)
-        self.btn_play = tk.Button(
-            self.control_frame, image=self.play, command=self.play_music
+        self.btn_play= tk.Button(
+            self.control_frame, image=self.play, command=self.toggle_play_pause
         )
         self.btn_forward = tk.Button(self.control_frame, image=self.forward)
 
@@ -59,26 +59,43 @@ class MusicPlayer:
             song_name = song_path.split("/")[-1].split(".")[:-1]
             self.song_dict[self.count] = [song_name, song_path]
             self.song_listbox.insert(self.count, song_name)
-            self.path = song_path
             self.count += 1
-
-    def play_music(self):
-            
-        if self.path:
-            pygame.mixer.music.load(self.path)
+    
+    def toggle_play_pause(self):
+        if self.path == "":
+            return
+        
+        if self.mxstate == 0:  # music not started
             pygame.mixer.music.play()
+            self.btn_play.configure(image = self.pause)
+            self.mxstate =  1
+            return
             
+        if self.mxstate == 1:  # music playing
+            pygame.mixer.music.pause()
+            self.btn_play.configure(image = self.play)
+        else:  # music paused
+            pygame.mixer.music.unpause()
+            self.btn_play.configure(image = self.pause)
+        self.mxstate = 3-self.mxstate  # swap pause state        
+           
+                
     def on_select(self, event):
+    
         w = event.widget
         index = int(w.curselection()[0])
         
         song_path = self.song_dict[index][1]
+        if song_path == self.path:
+            return
         if song_path:
             self.path = song_path
+        pygame.mixer.music.load(self.path)
+        
+        self.mxstate = 0
+        self.btn_play.configure(image = self.play)
         
    
-
-
 if __name__ == "__main__":
 
     root = tk.Tk()
