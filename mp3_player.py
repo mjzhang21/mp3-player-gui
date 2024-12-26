@@ -24,6 +24,8 @@ class MusicPlayer:
 
         self.play = tk.PhotoImage(file="images/play-button.png")
         self.pause = tk.PhotoImage(file="images/pause-button.png")
+        
+         
         self.forward = tk.PhotoImage(file="images/forward-button.png")
         self.back = tk.PhotoImage(file="images/back-button.png")
 
@@ -83,9 +85,12 @@ class MusicPlayer:
     def on_select(self, event):
     
         w = event.widget
+        if len(self.song_dict) == 0:
+            return
         index = int(w.curselection()[0])
         
         song_path = self.song_dict[index][1]
+        
         if song_path == self.path:
             return
         if song_path:
@@ -94,8 +99,7 @@ class MusicPlayer:
         
         self.mxstate = 0
         self.btn_play.configure(image = self.play)
-        
-   
+         
 if __name__ == "__main__":
 
     root = tk.Tk()
