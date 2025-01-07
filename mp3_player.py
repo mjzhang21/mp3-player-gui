@@ -1,5 +1,6 @@
 import pygame
 import tkinter as tk
+import os
 from tkinter import filedialog
 
 class MusicPlayer:
@@ -8,9 +9,8 @@ class MusicPlayer:
         self.root.title("Amazing MP3 Player")
         self.root.geometry("800x600")
 
-        self.song_dict = {}
-        self.path = ""
-        self.count = 0
+        self.playlist = []
+        self.current_song = ""
         self.mxstate = 0 #music play state
 
         pygame.mixer.init()
@@ -19,7 +19,7 @@ class MusicPlayer:
         self.root.config(menu=self.my_menu)
         self.file_menu = tk.Menu(self.my_menu, tearoff=0)
         self.my_menu.add_cascade(label="File", menu=self.file_menu)
-        self.file_menu.add_command(label="Open", command=self.add_song)
+        self.file_menu.add_command(label="Select Folder", command=self.add_playlist)
         self.file_menu.add_command(label="Exit", command=quit)
 
         self.play = tk.PhotoImage(file="images/play-button.png")
@@ -53,21 +53,31 @@ class MusicPlayer:
         
         self.song_listbox.bind('<<ListboxSelect>>', self.on_select)
 
-    def add_song(self):
-        song_path = tk.filedialog.askopenfilename(
-            title="Select a file", filetypes=(("mp3 Files", "*.mp3"),),initialdir = r"C:\Users\piefo\Music\playlists"
+    def add_playlist(self):
+        self.root.directory = tk.filedialog.askdirectory(
+            title="Select a folder", initialdir = r"C:\Users\piefo\Music\playlists"
         )
-        if song_path:
-            song_name = song_path.split("/")[-1].split(".")[:-1]
-            self.song_dict[self.count] = [song_name, song_path]
-            self.song_listbox.insert(self.count, song_name)
-            self.count += 1
+        self.playlist.clear()
+        self.song_listbox.delete(0)
+        
+        
+        for file in os.listdir(self.root.directory):
+            name, ext = os.path.splitext(file)
+            if ext == '.mp3':
+                self.playlist.append(file)
+                
+        for song in self.playlist:
+            self.song_listbox.insert("end", song.split(".")[0])
+        
+        
+            
     
     def toggle_play_pause(self):
-        if self.path == "":
+        if not self.playlist:
             return
         
         if self.mxstate == 0:  # music not started
+            
             pygame.mixer.music.play()
             self.btn_play.configure(image = self.pause)
             self.mxstate =  1
@@ -81,24 +91,18 @@ class MusicPlayer:
             self.btn_play.configure(image = self.pause)
         self.mxstate = 3-self.mxstate  # swap pause state        
            
-                
     def on_select(self, event):
-    
+        
         w = event.widget
-        if len(self.song_dict) == 0:
-            return
         index = int(w.curselection()[0])
         
-        song_path = self.song_dict[index][1]
-        
-        if song_path == self.path:
+        if self.current_song == self.playlist[index]:
             return
-        if song_path:
-            self.path = song_path
-        pygame.mixer.music.load(self.path)
-        
+        self.current_song = self.playlist[index]
         self.mxstate = 0
         self.btn_play.configure(image = self.play)
+        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+    
          
 if __name__ == "__main__":
 
