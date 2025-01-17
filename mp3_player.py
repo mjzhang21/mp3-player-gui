@@ -31,10 +31,10 @@ class MusicPlayer:
         self.root.rowconfigure(0, weight=4)
         self.root.rowconfigure(1, minsize=100, weight=0)
         self.root.columnconfigure(0, weight=4)
-        self.root.columnconfigure(1, minsize = 200, weight = 1)
+     
 
         self.song_listbox = tk.Listbox(self.root, bg="gray43", fg="white", font = ('Times', 18), width = 8, activestyle=tk.NONE)
-        self.song_listbox.grid(row=0, column=1, rowspan=2, sticky="nsew")
+        self.song_listbox.grid(row=0, column=0, rowspan=1, sticky="nsew")
 
         self.control_frame = tk.Frame(self.root)
         self.control_frame.grid(row=1, column=0, sticky="ns")
@@ -45,9 +45,9 @@ class MusicPlayer:
         )
         self.btn_forward = tk.Button(self.control_frame, image=self.forward, command = self.next_song)
 
-        self.btn_back.grid(row=0, column=0, sticky="ew", padx=15)
-        self.btn_play.grid(row=0, column=1, sticky="ew", padx=15)
-        self.btn_forward.grid(row=0, column=2, sticky="ew", padx=15)
+        self.btn_back.grid(row=1, column=0, sticky="ew", padx=15)
+        self.btn_play.grid(row=1, column=1, sticky="ew", padx=15)
+        self.btn_forward.grid(row=1, column=2, sticky="ew", padx=15)
         
         self.song_listbox.bind('<<ListboxSelect>>', self.on_select)
 
@@ -56,7 +56,7 @@ class MusicPlayer:
             title="Select a folder", initialdir = r"C:\Users\piefo\Music\playlists"
         )
         self.playlist.clear()
-        self.song_listbox.delete(0)
+        self.song_listbox.delete(0,tk.END)
         
         
         for file in os.listdir(self.root.directory):
@@ -89,31 +89,35 @@ class MusicPlayer:
     def next_song(self):
         #next_one is a tuple with index of song in first position
         next_one = self.song_listbox.curselection()
-        
-        next_one = next_one[0] +1
-        self.song_listbox.selection_clear(0, tk.END)
-        self.song_listbox.selection_set(next_one)
-        self.current_song = self.playlist[next_one]
-        self.mxstate = 1
-        self.btn_play.configure(image = self.pause)
-        
-        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
-        pygame.mixer.music.play()  
-              
+        if next_one[0] +1 == len(self.playlist):
+            return
+        else:
+            next_one = next_one[0] +1
+            self.song_listbox.selection_clear(0, tk.END)
+            self.song_listbox.selection_set(next_one)
+            self.current_song = self.playlist[next_one]
+            self.mxstate = 1
+            self.btn_play.configure(image = self.pause)
+            
+            pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+            pygame.mixer.music.play()  
+                
     def previous_song(self):
         #next_one is a tuple with index of song in first position
         prev_one = self.song_listbox.curselection()
+        if prev_one[0] == 0:
+            return
+        else:
+            prev_one = prev_one[0] -1
+            self.song_listbox.selection_clear(0, tk.END)
+            self.song_listbox.selection_set(prev_one)
+            self.current_song = self.playlist[prev_one]
+            self.mxstate = 1
+            self.btn_play.configure(image = self.pause)
         
-        prev_one = prev_one[0] -1
-        self.song_listbox.selection_clear(0, tk.END)
-        self.song_listbox.selection_set(prev_one)
-        self.current_song = self.playlist[prev_one]
-        self.mxstate = 1
-        self.btn_play.configure(image = self.pause)
-        
-        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
-        pygame.mixer.music.play()
-        
+            pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+            pygame.mixer.music.play()
+            
     def on_select(self, event):
         
         w = event.widget
