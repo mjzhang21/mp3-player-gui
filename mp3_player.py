@@ -74,15 +74,20 @@ class MusicPlayer:
             print("Song is finshed")
 
     def add_playlist(self):
-        self.root.directory = tk.filedialog.askdirectory(title="Select a folder")
+        self.directory = tk.filedialog.askdirectory(
+            title="Select a folder", initialdir=os.getcwd()
+        )
+        if not self.directory:
+            return 
         self.playlist.clear()
         self.song_listbox.delete(0, tk.END)
 
-        for file in os.listdir(self.root.directory):
+        for file in os.listdir(self.directory):
             name, ext = os.path.splitext(file)
-            if ext == ".mp3":
+            if ext.lower() == ".mp3":
                 self.playlist.append(file)
 
+    # Show songs in the listbox
         for song in self.playlist:
             self.song_listbox.insert("end", song.split(".")[0])
 
@@ -112,7 +117,7 @@ class MusicPlayer:
             next_one[0] + 1 == len(self.playlist)
         except IndexError:
             return
-        
+
         next_one = next_one[0] + 1
         self.song_listbox.selection_clear(0, tk.END)
         self.song_listbox.selection_set(next_one)
@@ -120,7 +125,7 @@ class MusicPlayer:
         self.mxstate = 1
         self.btn_play.configure(image=self.pause)
 
-        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+        pygame.mixer.music.load(os.path.join(self.directory, self.current_song))
         pygame.mixer.music.play()
 
     def previous_song(self):
@@ -137,7 +142,7 @@ class MusicPlayer:
         self.mxstate = 1
         self.btn_play.configure(image=self.pause)
 
-        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+        pygame.mixer.music.load(os.path.join(self.directory, self.current_song))
         pygame.mixer.music.play()
 
     def on_select(self, event):
@@ -150,7 +155,7 @@ class MusicPlayer:
         self.current_song = self.playlist[index]
         self.mxstate = 0
         self.btn_play.configure(image=self.play)
-        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+        pygame.mixer.music.load(os.path.join(self.directory, self.current_song))
 
 
 if __name__ == "__main__":
