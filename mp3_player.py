@@ -124,18 +124,19 @@ class MusicPlayer:
     def previous_song(self):
         # next_one is a tuple with index of song in first position
         prev_one = self.song_listbox.curselection()
-        if prev_one[0] == 0:
+        try:
+            prev_one[0] == 0
+        except IndexError:
             return
-        else:
-            prev_one = prev_one[0] - 1
-            self.song_listbox.selection_clear(0, tk.END)
-            self.song_listbox.selection_set(prev_one)
-            self.current_song = self.playlist[prev_one]
-            self.mxstate = 1
-            self.btn_play.configure(image=self.pause)
+        prev_one = prev_one[0] - 1
+        self.song_listbox.selection_clear(0, tk.END)
+        self.song_listbox.selection_set(prev_one)
+        self.current_song = self.playlist[prev_one]
+        self.mxstate = 1
+        self.btn_play.configure(image=self.pause)
 
-            pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
-            pygame.mixer.music.play()
+        pygame.mixer.music.load(os.path.join(root.directory, self.current_song))
+        pygame.mixer.music.play()
 
     def on_select(self, event):
 
